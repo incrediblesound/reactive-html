@@ -37,6 +37,19 @@ Emitter.prototype.filter = function(num, fn, name){
   return this;
 }
 
+Emitter.prototype.map = function(fn){
+  var _this = this;
+  var output = {
+    then: function(fn2){
+      bus.add(_this.event, _this.context, function (_this){
+        var result = fn();
+        fn2(result)
+      });
+    }
+  };
+  return output;
+}
+
 // decorator used to make an object reactive //
 
 var reactive = function(obj){

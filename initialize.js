@@ -37,7 +37,13 @@ btn2
 .run(
   function (_this){
   _this.textContent = "0";
-});
+})
+.map(function(){
+  return 1;
+})
+.then(function(val){
+  console.log(val);
+})
 
 // every five clicks run the callback and emit the 'five' event
 btn3
