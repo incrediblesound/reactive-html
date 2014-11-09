@@ -53,6 +53,7 @@ Emitter.prototype.map = function(fn){
         var result = fn();
         fn2(result);
       });
+      return _this;
     }
   };
   return output;

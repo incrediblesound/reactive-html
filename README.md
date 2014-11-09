@@ -34,6 +34,7 @@ div.listen('click').filter(3).run(function(_this){ _this.innerText = "thrice cli
 // map takes a function that should return some value when the event is triggered. 
 // it does not return an emitter, but returns a "then" method which takes a function that will be invoked 
 // with the value return by the map function whenever the event is triggered.
+// the original emitter will be returned by then for continued chaining
 window.listen('click').map(function(){ return 1 }).then(function(val){ console.log(val)});
 ```
 
