@@ -21,8 +21,8 @@ Emitter.prototype.add = function(fn){
   })
 };
 
-Emitter.prototype.emit = function(event2){
-  bus.events.push(event2);
+Emitter.prototype.emit = function(event2, data){
+  bus.addEvent(event2, data);
   return this;
 }
 
@@ -32,6 +32,7 @@ Emitter.prototype.listen = function(e){
 
 Emitter.prototype.merge = function(e){
   this.events.push(e);
+  return this;
 }
 
 Emitter.prototype.run = function(fn){
@@ -63,8 +64,8 @@ var reactive = function(obj){
   obj.listen = function(e){
     return new Emitter(e, obj);
   }
-  obj.emit = function(e){
-    bus.events.push(e);
+  obj.emit = function(e, data){
+    bus.addEvent(e, data);
   }
   return obj;
 }

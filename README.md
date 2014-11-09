@@ -29,7 +29,7 @@ div.listen('click').run(function(_this){ _this.innerText = "clicked" }).run(etc.
 
 // filter takes a number and modifies the emitter to trigger functions only at    
 // intervals equal to the number
-div.listen('click').filter(3).run(function(_this){ _this.innerText = "thrice clicked" }, 'three');
+div.listen('click').filter(3).run(function(_this){ _this.innerText = "thrice clicked" });
 
 // map takes a function that should return some value when the event is triggered. 
 // it does not return an emitter, but returns a "then" method which takes a function that will be invoked 

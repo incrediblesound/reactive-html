@@ -3,6 +3,7 @@ var buttons = document.getElementsByTagName('button');
 
 // make our elements reactive //
 div = reactive(div);
+document = reactive(document);
 forEach(buttons, function(btn){
   btn = reactive(btn);
 });
@@ -14,8 +15,9 @@ var btn3 = buttons[2];
 
 // emit a click event from the event bus on every onclick event on the buttons //
 bus.listen([btn, btn2, btn3], 'click');
+bus.listen(document, 'keypress');
 
-//append a message for every three click events
+//append a message for every three click events and for each keypress
 div
 .listen('click')
 .filter(3)
@@ -23,7 +25,20 @@ div
   var msg = document.createElement('p');
   msg.textContent = "three clicks";
   _this.appendChild(msg);
-});
+})
+.listen('keypress')
+.run(function (_this, e){
+  var p = document.createElement('p');
+  p.innerText = 'Pressed';
+  _this.appendChild(p);
+})
+.listen('keypress')
+.merge('click')
+.run(function (_this){
+  var p = document.createElement('p');
+  p.innerText = 'Click or Press';
+  _this.appendChild(p);
+})
 
 // increment button text on every click event and reset to zero on every five event
 btn2
@@ -52,4 +67,4 @@ btn3
   var num = parseInt(text[text.length-1]);
   num += 1;
   _this.textContent = "five-clicks: "+num;
-});
+})
