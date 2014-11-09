@@ -31,6 +31,9 @@ div.listen('click').run(function(_this){ _this.innerText = "clicked" }).run(etc.
 // intervals equal to the number
 div.listen('click').filter(3).run(function(_this){ _this.innerText = "thrice clicked" });
 
+// merge returns an emitter that can trigger a function on multiple events
+div.listen('click').merge('keypress').run(function(_this){ _this.innerText = "click or press" });
+
 // map takes a function that should return some value when the event is triggered. 
 // it does not return an emitter, but returns a "then" method which takes a function that will be invoked 
 // with the value return by the map function whenever the event is triggered.
