@@ -19,7 +19,7 @@ forEach(buttons, function(button){
 bus.listen(buttons, 'click');
 ```
 Call listen on a reactive element to make it react to an event. The listen method will return an Emitter object which has the following methods:    
-<strong>RUN</strong>
+<strong>RUN</strong>    
 Run will invoke the function passed into it when the listen event is emitted.
 ```javascript
 div.listen('click').run(function(_this){ _this.innerText = "clicked" })
