@@ -1,5 +1,5 @@
-Responsive HTML
-===============
+Reactive HTML
+=============
 
 This is a framework for writing reactive websites. It uses a central event bus and a decatorator that adds chainable methods to any object.
 
