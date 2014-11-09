@@ -14,29 +14,33 @@ var btn3 = buttons[2];
 // setup reactive behavior //
 
 // emit a click event from the event bus on every onclick event on the buttons //
-bus.listen([btn, btn2, btn3], 'click');
-bus.listen(document, 'keypress');
+bus.listen({
+  items: [btn, btn2, btn3], 
+  name: 'click',
+  type: 'html'
+  });
+bus.listen({
+  items: document, 
+  name: 'keypress',
+  type: 'html'
+});
 
 //append a message for every three click events and for each keypress
 div
 .listen('click')
-.filter(3)
+.interval(3)
 .run(function (_this){
   var msg = document.createElement('p');
   msg.textContent = "three clicks";
   _this.appendChild(msg);
 })
 .listen('keypress')
-.run(function (_this, e){
-  var p = document.createElement('p');
-  p.innerText = 'Pressed';
-  _this.appendChild(p);
+.filter(function (_this, data){
+  return (data.keyCode && data.keyCode === 102);
 })
-.listen('keypress')
-.merge('click')
-.run(function (_this){
+.run(function (_this, data){
   var p = document.createElement('p');
-  p.innerText = 'Click or Press';
+  p.innerText = 'Pressed F';
   _this.appendChild(p);
 })
 
@@ -61,7 +65,7 @@ btn2
 // every five clicks run the callback and emit the 'five' event
 btn3
 .listen('click')
-.filter(5)
+.interval(5)
 .run(function (_this){
   var text = _this.textContent;
   var num = parseInt(text[text.length-1]);

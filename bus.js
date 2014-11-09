@@ -21,21 +21,25 @@ var bus = {
       }
     }, 5)
   },
-  listen: function(objs, e){
-    if(!Array.isArray(objs)){
-      objs = [objs];
+  listen: function(options){
+    if(!Array.isArray(options.items)){
+      options.items = [options.items];
     }
-    forEach(objs, function(obj){
-      var eventName = 'on'+e;
-      obj[eventName] = function(data){
-        if(!!data && 'stopPropagation' in data){
-          data.stopPropagation();
+    forEach(options.items, function(obj){
+      if(options.type === 'html'){
+        var eventName = 'on' + options.name;
+        obj[eventName] = function(data){
+          if(data !== undefined && ('stopPropagation' in data)){
+            data.stopPropagation();
+            obj.emit(options.name, data);    
+          } 
+          else {
+            obj.emit(options.name);
+          }
         }
-        if(data !== undefined){
-          obj.emit(e, data);  
-        } else {
-          obj.emit(e);
-        }
+      }
+      else if(options.type === 'object'){
+        //
       }
     })
   },

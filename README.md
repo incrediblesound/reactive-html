@@ -26,13 +26,23 @@ div.listen('click').run(function(_this){ _this.innerText = "clicked" })
 // run returns the emitter for method chaining
 div.listen('click').run(function(_this){ _this.innerText = "clicked" }).run(etc...)
 ```
-<strong>FILTER</strong>    
-Filter takes a number and modifies the emitter to trigger functions only at intervals equal to the number.
+<strong>INTERVAL</strong>    
+Interval takes a number and modifies the emitter to trigger functions only at intervals equal to the number.
 ```javascript
 div    
 .listen('click')    
-.filter(3)   
+.interval(3)   
 .run(function(_this){ _this.innerText = "thrice clicked" });
+```
+<strong>FILTER</strong>    
+Filter takes a function and modifies the emitter to trigger event responses only when the filter function returns false.
+```javascript
+div    
+.listen('keypress')    
+.filter(function(_this, data){
+	return(data.keyCode === 102);
+})   
+.run(function(_this){ _this.innerText = "Pressed 'f' key" });
 ```
 <strong>MERGE</strong>    
 Merge returns an emitter that can trigger a function on multiple events.
