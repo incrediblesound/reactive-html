@@ -11,10 +11,10 @@ Emitter.prototype.add = function(fn){
       bus.add(e, _this.context, fn);
     } else {
       var count = 0;
-      bus.add(e, _this.context, function (context){
+      bus.add(e, _this.context, function (context, data){
         count++;
         if(count % _this.modulo === 0){
-          fn(context);
+          fn(context, data);
         }
       });
     };
@@ -49,9 +49,9 @@ Emitter.prototype.map = function(fn){
   var _this = this;
   var output = {
     then: function(fn2){
-      _this.add(function (_this){
-        var result = fn();
-        fn2(result);
+      _this.add(function (_this, data){
+        var result = fn(_this.context, data);
+        fn2(result, _this.context);
       });
       return _this;
     }

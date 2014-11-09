@@ -19,26 +19,37 @@ forEach(buttons, function(button){
 bus.listen(buttons, 'click');
 ```
 Call listen on a reactive element to make it react to an event. The listen method will return an Emitter object which has the following methods:
+<strong>RUN</strong>
+Run will invoke the function passed into it when the listen event is emitted.
 ```javascript
-// run will run the function when the event passed into listen is emitted
 div.listen('click').run(function(_this){ _this.innerText = "clicked" })
-
 // run returns the emitter for method chaining
 div.listen('click').run(function(_this){ _this.innerText = "clicked" }).run(etc...)
-
-
-// filter takes a number and modifies the emitter to trigger functions only at    
-// intervals equal to the number
-div.listen('click').filter(3).run(function(_this){ _this.innerText = "thrice clicked" });
-
-// merge returns an emitter that can trigger a function on multiple events
-div.listen('click').merge('keypress').run(function(_this){ _this.innerText = "click or press" });
-
-// map takes a function that should return some value when the event is triggered. 
-// it does not return an emitter, but returns a "then" method which takes a function that will be invoked 
-// with the value return by the map function whenever the event is triggered.
-// the original emitter will be returned by then for continued chaining
-window.listen('click').map(function(){ return 1 }).then(function(val){ console.log(val)});
+```
+<strong>FILTER</strong>
+Filter takes a number and modifies the emitter to trigger functions only at intervals equal to the number.
+```javascript
+div    
+.listen('click')    
+.filter(3)   
+.run(function(_this){ _this.innerText = "thrice clicked" });
+```
+<strong>MERGE</strong>
+Merge returns an emitter that can trigger a function on multiple events.
+```javascript
+div     
+.listen('click')   
+.merge('keypress')    
+.run(function(_this){ _this.innerText = "click or press" });
+```
+<strong>MAP</strong>
+Map takes a function that returns any value. The function passed into map will be invoked with the context and any data passed along with the event. Map does not return an emitter, but instead returns an object with a "then" method that takes a function. The function passed into "then" will be invoked with the value returned by the map function and the context whenever the event is triggered. The original emitter will be returned by then for continued chaining.
+```javascript
+window
+.listen('click')
+.map(function(_this, e){ return _this.users })
+.then(function(val, _this){ _this.count = val })
+.run(...)
 ```
 
 
