@@ -1,7 +1,25 @@
 var Emitter = function(event, context){
-  this.event = event;
+  this.events = [event];
   this.context = context;
+  this.modulo = undefined;
 }
+
+Emitter.prototype.add = function(fn){
+  var _this = this;
+  forEach(this.events, function(e){
+    if(_this.modulo === undefined){
+      bus.add(e, _this.context, fn);
+    } else {
+      var count = 0;
+      bus.add(e, _this.context, function (context){
+        count++;
+        if(count % _this.modulo === 0){
+          fn(context);
+        }
+      });
+    };
+  })
+};
 
 Emitter.prototype.emit = function(event2){
   bus.events.push(event2);
@@ -13,27 +31,16 @@ Emitter.prototype.listen = function(e){
 }
 
 Emitter.prototype.merge = function(e){
-  // TODO: merge event streams
+  this.events.push(e);
 }
 
 Emitter.prototype.run = function(fn){
-  var _this = this;
-  bus.add(_this.event, _this.context, fn);
+  this.add(fn);
   return this;
 }
 
-Emitter.prototype.filter = function(num, fn, name){
-  var count = 0;
-  var _this = this;
-  bus.add(_this.event, _this.context, function (context){
-    count++;
-    if(count % num === 0){
-      fn(context);
-      if(name !== undefined){ 
-        bus.events.push(name); 
-      }
-    }
-  })
+Emitter.prototype.filter = function(num){
+  this.modulo = num;
   return this;
 }
 
@@ -41,9 +48,9 @@ Emitter.prototype.map = function(fn){
   var _this = this;
   var output = {
     then: function(fn2){
-      bus.add(_this.event, _this.context, function (_this){
+      _this.add(function (_this){
         var result = fn();
-        fn2(result)
+        fn2(result);
       });
     }
   };

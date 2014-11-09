@@ -18,18 +18,22 @@ forEach(buttons, function(button){
 // make the onclick event listener emit a 'click' event from the event bus.
 bus.listen(buttons, 'click');
 ```
-Call listen on a reactive element to make it react to an event. Right now there are three methods that can be chained onto a listen call:
+Call listen on a reactive element to make it react to an event. The listen method will return an Emitter object which has the following methods:
 ```javascript
-// run will run the function when the even passed into listen is emitted
+// run will run the function when the event passed into listen is emitted
 div.listen('click').run(function(_this){ _this.innerText = "clicked" })
 
-// filter takes a number, a function, and an optional event. when the event passed into listen 
-// has happened a number of times equal to the number, the function will be called and the event emitted.
-div.listen('click').filter(3, function(_this){ _this.innerText = "thrice clicked" }, 'three');
+// run returns the emitter for method chaining
+div.listen('click').run(function(_this){ _this.innerText = "clicked" }).run(etc...)
+
+
+// filter takes a number and modifies the emitter to trigger functions only at    
+// intervals equal to the number
+div.listen('click').filter(3).run(function(_this){ _this.innerText = "thrice clicked" }, 'three');
 
 // map takes a function that should return some value when the event is triggered. 
-// it is chained upon with the "then" method which takes a function that will be invoked 
-// with the value whenever the event is triggered.
+// it does not return an emitter, but returns a "then" method which takes a function that will be invoked 
+// with the value return by the map function whenever the event is triggered.
 window.listen('click').map(function(){ return 1 }).then(function(val){ console.log(val)});
 ```
 
