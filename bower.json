@@ -1,0 +1,23 @@
+{
+  "name": "reactive-event-bus",
+  "version": "0.0.0",
+  "homepage": "https://github.com/incrediblesound/reactive-html",
+  "authors": [
+    "James H. Edwards <james.howe.edwards@gmail.com>"
+  ],
+  "description": "A central event bus with chainable event emitters",
+  "main": "dist/main.js",
+  "keywords": [
+    "reactive",
+    "event",
+    "system"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

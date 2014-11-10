@@ -17,9 +17,9 @@ var bus = {
           var cb = response[0];
           var context = response[1];
           cb(context, data);
-        })
+        });
       }
-    }, 5)
+    }, 5);
   },
   listen: function(options){
     if(!Array.isArray(options.items)){
@@ -36,12 +36,12 @@ var bus = {
           else {
             obj.emit(options.name);
           }
-        }
+        };
       }
       else if(options.type === 'object'){
         //
       }
-    })
+    });
   },
   add: function(e, context, fn){
     if(this.eventMap[e] === undefined){
@@ -56,7 +56,7 @@ var bus = {
       this.events.push([e, data]);
     }
   }
-}
+};
 
 bus.run();
 
