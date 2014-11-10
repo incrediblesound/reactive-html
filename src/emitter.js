@@ -2,19 +2,32 @@ var Emitter = function(event, context){
   this.events = [event];
   this.context = context;
   this.modulo = undefined;
-  this.filterFn = undefined;
+  this.filterFn = [];
   this.data = undefined;
 };
 
 Emitter.prototype.add = function(fn){
   var _this = this;
-  if(this.filterFn !== undefined){
-    var cb = fn;
-    fn = function(context, data){
-      if(_this.filterFn(context, data)){
-        cb(context, data);
+  if(this.filterFn.length){
+    var cb = fn, prev;
+    forEach(this.filterFn, function(filter, index){
+      if(index === 0){
+        fn = function(context, data){
+          if(filter(context, data)){
+            cb(context, data);
+          }
+        };
+      } else {
+        fn = function(context, data){
+          if(filter(context, data)){
+            prev(context, data);
+          }
+        }
       }
-    };
+      if(index < _this.filterFn.length -1){
+        prev = fn;
+      }
+    })
   }
   forEach(this.events, function(e){
     if(_this.modulo === undefined){
@@ -24,6 +37,7 @@ Emitter.prototype.add = function(fn){
       bus.add(e, _this.context, function (context, data){
         count++;
         if(count % _this.modulo === 0){
+          debugger;
           fn(context, data);
         }
       });
@@ -56,7 +70,7 @@ Emitter.prototype.interval = function(num){
 };
 
 Emitter.prototype.filter = function(filterFn){
-  this.filterFn = filterFn;
+  this.filterFn.push(filterFn);
   return this;
 };
 

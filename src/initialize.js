@@ -64,11 +64,13 @@ btn2
 
 // every five clicks run the callback and emit the 'five' event
 btn3
-.listen('click')
-.interval(5)
-.run(function (_this){
-  var text = _this.textContent;
-  var num = parseInt(text[text.length-1]);
-  num += 1;
-  _this.textContent = "five-clicks: "+num;
+.listen('go')
+.filter(function(_this, data){
+  return data.length === 4;
+})
+.filter(function(_this, data){
+  return data === 'this';
+})
+.run(function(_this, data){
+  console.log('good');
 })
