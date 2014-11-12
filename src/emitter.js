@@ -9,23 +9,22 @@ var Emitter = function(event, context){
 Emitter.prototype.add = function(fn){
   var _this = this;
   if(this.filterFn.length){
-    var cb = fn, prev;
+    var callback = fn, previousFn;
     forEach(this.filterFn, function(filter, index){
       if(index === 0){
         fn = function(context, data){
-          if(filter(context, data)){
-            cb(context, data);
-          }
+          if (filter(context, data)){ callback(context, data); }
         };
-      } else {
+      } 
+      else {
         fn = function(context, data){
           if(filter(context, data)){
-            prev(context, data);
+            previousFn(context, data);
           }
         }
       }
-      if(index < _this.filterFn.length -1){
-        prev = fn;
+      if(index < _this.filterFn.length-1){
+        previousFn = fn;
       }
     })
   }
@@ -37,7 +36,6 @@ Emitter.prototype.add = function(fn){
       bus.add(e, _this.context, function (context, data){
         count++;
         if(count % _this.modulo === 0){
-          debugger;
           fn(context, data);
         }
       });
@@ -45,10 +43,11 @@ Emitter.prototype.add = function(fn){
   });
 };
 
-Emitter.prototype.emit = function(event2, data){
-  bus.addEvent(event2, data);
-  return this;
-};
+Emitter.prototype.emit = function(e, data){
+  this.add(function(_this, data){
+    _this.emit(e, data);
+  })
+}
 
 Emitter.prototype.listen = function(e){
   return new Emitter(e, this.context);

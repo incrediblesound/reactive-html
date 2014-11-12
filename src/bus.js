@@ -3,23 +3,22 @@ var bus = {
   eventMap: {},
   run: function(){
     var _this = this;
-    var data, _event;
+    var data, _event, _eventData;
     setInterval(function(){
+      // every ten ms pull an event off the front of the event queue //
       if(_this.events.length){
-        _event = _this.events.shift();
-        if(Array.isArray(_event)){
-          data = _event.pop();
-          _event = _event.pop();
-        } else {
-          data = undefined;
-        }
+        _eventData = _this.events.shift();
+        _event = _eventData[0];
+        data = _eventData[1];
+        // for every callback registered to that event, invoke the callback
+        // and pass in the event data
         forEach(_this.eventMap[_event], function(response){
           var cb = response[0];
           var context = response[1];
           cb(context, data);
         });
       }
-    }, 5);
+    }, 10);
   },
   listen: function(options){
     if(!Array.isArray(options.items)){
@@ -39,7 +38,7 @@ var bus = {
         };
       }
       else if(options.type === 'object'){
-        //
+        // TODO
       }
     });
   },
@@ -50,11 +49,7 @@ var bus = {
     this.eventMap[e].push([fn, context]);
   },
   addEvent: function(e, data){
-    if(data === undefined){
-      this.events.push(e);
-    } else {
-      this.events.push([e, data]);
-    }
+    this.events.push([e, data]);
   }
 };
 
