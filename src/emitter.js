@@ -47,6 +47,7 @@ Emitter.prototype.emit = function(e, data){
   this.add(function(_this, data){
     _this.emit(e, data);
   })
+  return this;
 }
 
 Emitter.prototype.listen = function(e){

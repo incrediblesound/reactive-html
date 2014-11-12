@@ -4,23 +4,22 @@ var bus = {
   eventMap: {},
   run: function(){
     var _this = this;
-    var data, _event;
+    var data, _event, _eventData;
     setInterval(function(){
+      // every ten ms pull an event off the front of the event queue //
       if(_this.events.length){
-        _event = _this.events.shift();
-        if(Array.isArray(_event)){
-          data = _event.pop();
-          _event = _event.pop();
-        } else {
-          data = undefined;
-        }
+        _eventData = _this.events.shift();
+        _event = _eventData[0];
+        data = _eventData[1];
+        // for every callback registered to that event, invoke the callback
+        // and pass in the event data
         forEach(_this.eventMap[_event], function(response){
           var cb = response[0];
           var context = response[1];
           cb(context, data);
         });
       }
-    }, 5);
+    }, 10);
   },
   listen: function(options){
     if(!Array.isArray(options.items)){
@@ -40,7 +39,7 @@ var bus = {
         };
       }
       else if(options.type === 'object'){
-        //
+        // TODO
       }
     });
   },
@@ -51,11 +50,7 @@ var bus = {
     this.eventMap[e].push([fn, context]);
   },
   addEvent: function(e, data){
-    if(data === undefined){
-      this.events.push(e);
-    } else {
-      this.events.push([e, data]);
-    }
+    this.events.push([e, data]);
   }
 };
 
@@ -72,19 +67,31 @@ var Emitter = function(event, context){
   this.events = [event];
   this.context = context;
   this.modulo = undefined;
-  this.filterFn = undefined;
+  this.filterFn = [];
   this.data = undefined;
 };
 
 Emitter.prototype.add = function(fn){
   var _this = this;
-  if(this.filterFn !== undefined){
-    var cb = fn;
-    fn = function(context, data){
-      if(_this.filterFn(context, data)){
-        cb(context, data);
+  if(this.filterFn.length){
+    var callback = fn, previousFn;
+    forEach(this.filterFn, function(filter, index){
+      if(index === 0){
+        fn = function(context, data){
+          if (filter(context, data)){ callback(context, data); }
+        };
+      } 
+      else {
+        fn = function(context, data){
+          if(filter(context, data)){
+            previousFn(context, data);
+          }
+        }
       }
-    };
+      if(index < _this.filterFn.length-1){
+        previousFn = fn;
+      }
+    })
   }
   forEach(this.events, function(e){
     if(_this.modulo === undefined){
@@ -101,10 +108,12 @@ Emitter.prototype.add = function(fn){
   });
 };
 
-Emitter.prototype.emit = function(event2, data){
-  bus.addEvent(event2, data);
+Emitter.prototype.emit = function(e, data){
+  this.add(function(_this, data){
+    _this.emit(e, data);
+  })
   return this;
-};
+}
 
 Emitter.prototype.listen = function(e){
   return new Emitter(e, this.context);
@@ -126,7 +135,7 @@ Emitter.prototype.interval = function(num){
 };
 
 Emitter.prototype.filter = function(filterFn){
-  this.filterFn = filterFn;
+  this.filterFn.push(filterFn);
   return this;
 };
 
