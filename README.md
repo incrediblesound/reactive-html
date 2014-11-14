@@ -61,7 +61,7 @@ Call listen on a reactive element to make it react to an event. The listen metho
 <strong>RUN</strong>  
 Run will invoke the function passed into it when the listen event is emitted.
 ```javascript
-var div = $('<div></div>);
+var div = $('<div></div>');
 div = reactive(div);
 
 div.listen('click').run(function(_this){ _this.innerText = "clicked" })
