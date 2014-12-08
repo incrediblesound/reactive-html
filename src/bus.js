@@ -4,21 +4,18 @@ var bus = {
   run: function(){
     var _this = this;
     var data, _event, _eventData;
-    setInterval(function(){
-      // every ten ms pull an event off the front of the event queue //
-      if(_this.events.length){
-        _eventData = _this.events.shift();
-        _event = _eventData[0];
-        data = _eventData[1];
-        // for every callback registered to that event, invoke the callback
-        // and pass in the event data
-        forEach(_this.eventMap[_event], function(response){
-          var cb = response[0];
-          var context = response[1];
-          cb(context, data);
-        });
-      }
-    }, 10);
+    if(_this.events.length){
+      _eventData = _this.events.shift();
+      _event = _eventData[0];
+      data = _eventData[1];
+      // for every callback registered to that event, invoke the callback
+      // and pass in the event data
+      forEach(_this.eventMap[_event], function(response){
+        var cb = response[0];
+        var context = response[1];
+        cb(context, data);
+      });
+    }
   },
   listen: function(options){
     if(!Array.isArray(options.items)){
@@ -50,10 +47,9 @@ var bus = {
   },
   addEvent: function(e, data){
     this.events.push([e, data]);
+    this.run();
   }
 };
-
-bus.run();
 
 // helper functions
 
