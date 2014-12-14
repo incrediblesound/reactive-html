@@ -18,6 +18,10 @@ var bus = {
       });
     }
   },
+  clear: function(){
+    this.events = [];
+    this.eventMap = {};
+  },
   listen: function(options){
     if(!Array.isArray(options.items)){
       options.items = [options.items];
